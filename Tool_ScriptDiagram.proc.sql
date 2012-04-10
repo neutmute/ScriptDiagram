@@ -1,6 +1,6 @@
 ﻿/**
 <summary>
-Script Sql Server diagrams
+Script Sql Server diagrams. Currently targeted SQL Server 2008.
 
 -History
 2012 - GitHub
@@ -110,8 +110,10 @@ Diagram name [' + @name + '] could not be found.
 		PRINT 'BEGIN TRY'
 		PRINT '    PRINT ''Write diagram ' + @name + ' into new row (and get [diagram_id])'''
 		SELECT @line =  
-			  '    INSERT INTO sysdiagrams ([name], [principal_id], [version], [definition])'
-			+ ' VALUES (''' + [name] + '''+@DiagramSuffix, '+ CAST (principal_id AS VARCHAR(100))+', '+CAST (version AS VARCHAR(100))+', 0x)'
+			  '	DECLARE @DiagramKey VARCHAR(100) = ''' + [name] + '''+@DiagramSuffix
+		DELETE FROM sysdiagrams WHERE name = @DiagramKey
+		INSERT INTO sysdiagrams ([name], [principal_id], [version], [definition])
+		VALUES (@DiagramKey, '+ CAST (principal_id AS VARCHAR(100))+', '+CAST (version AS VARCHAR(100))+', 0x)'
 		FROM sysdiagrams WHERE diagram_id = @diagram_id
 		PRINT @line
 		PRINT '    SET @newid = SCOPE_IDENTITY()'
