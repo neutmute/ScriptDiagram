@@ -1,11 +1,16 @@
 ﻿/**
 <summary>
-Script Sql Server 2005 diagrams
-(inspired by usp_ScriptDatabaseDiagrams for Sql Server 2000 by Clay Beatty)
+Script Sql Server diagrams
+
+-History
+2012 - GitHub
+2009 - ConceptDev - http://www.conceptdevelopment.net/Database/ScriptDiagram2008/
+200? - Clay Beatty - usp_ScriptDatabaseDiagrams
+
 </summary>
 <example>
 --NOTE: Scalar-valued Function [Tool_VarbinaryToVarcharHex] must exist before this script is run
-EXEC Tool_ScriptDiagram2008 'DatabaseName'
+EXEC Tool_ScriptDiagram 'DatabaseName'
 </example>
 <remarks>
 Helpful Articles
@@ -23,7 +28,7 @@ http://www.thescripts.com/forum/thread81534.html
 <param name="name">Name of the diagram in the Sql Server database instance</param>
 */
 
-CREATE PROCEDURE dbo.Tool_ScriptDiagram2008
+CREATE PROCEDURE dbo.Tool_ScriptDiagram
 (
 	@name VARCHAR(128)
 )
@@ -144,5 +149,6 @@ Diagram name [' + @name + '] could not be found.
 		PRINT '    PRINT ''XxXxX END Tool_ScriptDiagram2008 - fix the error before running again XxXxX'''
 		PRINT '    RETURN'
 		PRINT 'END CATCH'
+		PRINT 'GO'
 	END
 END
