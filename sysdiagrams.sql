@@ -22,5 +22,9 @@ CREATE TABLE dbo.sysdiagrams
 )
 GO
 
-EXEC sys.sp_addextendedproperty @name=N'microsoft_database_tools_support', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sysdiagrams'
-GO
+/*
+If the 'microsoft_database_tools_support' property already exists on the target, it needs to be deleted otherwise SSDT will try and publish the table which already exists
+The side effect is the table is no longer hidden under 'System Tables' in SSMS
+*/
+--EXEC sys.sp_addextendedproperty @name=N'microsoft_database_tools_support', @value=1 , @level0type=N'SCHEMA',@level0name=N'dbo', @level1type=N'TABLE',@level1name=N'sysdiagrams'
+--GO
