@@ -8,8 +8,7 @@ Script Sql Server diagrams.
 200? - Clay Beatty - usp_ScriptDatabaseDiagrams
 </summary>
 <example>
---NOTE: Scalar-valued Function [Tool_VarbinaryToVarcharHex] must exist before this script is run
-EXEC Tool_ScriptDiagram 'DatabaseName'
+EXEC Tool_ScriptDiagram 'Diagram Name'
 </example>
 <remarks>
 Helpful Articles
@@ -25,6 +24,11 @@ http://www.thescripts.com/forum/thread81534.html
 <![CDATA[ http://groups-beta.google.com/group/comp.databases.ms-sqlserver/browse_frm/thread/ca9a9229d06a56f9?dq=&hl=en&lr=&ie=UTF-8&oe=UTF-8&prev=/groups%3Fdq%3D%26num%3D25%26hl%3Den%26lr%3D%26ie%3DUTF-8%26oe%3DUTF-8%26group%3Dcomp.databases.ms-sqlserver%26start%3D25 ]]>
 </remarks>
 <param name="name">Name of the diagram in the Sql Server database instance</param>
+
+4) SQL2008 'undocumented' sys.fn_varbintohexstr
+http://www.sqlservercentral.com/Forums/Topic664234-1496-1.aspx
+
+DROP PROCEDURE dbo.Tool_ScriptDiagram
 */
 
 CREATE PROCEDURE dbo.Tool_ScriptDiagram
@@ -68,7 +72,7 @@ Diagram name [' + @name + '] could not be found.
 		PRINT '</remarks>'
 		PRINT '<generated>' + LEFT(CONVERT(VARCHAR(23), GETDATE(), 121), 16) + '</generated>'
 		PRINT '*/'
-		PRINT 'PRINT ''=== Tool_ScriptDiagram restore diagram [' + @name + '] ==='''
+		PRINT 'PRINT ''=== Tool_ScriptDiagram restoring diagram ''''' + @name + ''''' ==='''
 		PRINT '	-- If the sysdiagrams table has not been created in this database, create it!
 				IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ''sysdiagrams'')
 				BEGIN
@@ -92,7 +96,7 @@ Diagram name [' + @name + '] could not be found.
 					)WITH (PAD_INDEX  = OFF, IGNORE_DUP_KEY = OFF) 
 					) 
 					EXEC sys.sp_addextendedproperty @name=N''microsoft_database_tools_support'', @value=1 , @level0type=N''SCHEMA'',@level0name=N''dbo'', @level1type=N''TABLE'',@level1name=N''sysdiagrams''
-					PRINT ''[sysdiagrams] table was created as it did not already exist''
+					PRINT ''dbo.sysdiagrams table was created as it did not already exist''
 				END
 				-- Target table will now exist, if it didn''t before'
 		PRINT 'SET NOCOUNT ON -- Hide (1 row affected) messages'
@@ -102,12 +106,12 @@ Diagram name [' + @name + '] could not be found.
 		--PRINT 'PRINT ''Suffix diagram name with date, to ensure uniqueness'''	
 		PRINT 'SET @DiagramSuffix = '''''
 		PRINT ''
-		PRINT 'PRINT ''Create row for new diagram'''
+		PRINT 'PRINT ''Creating row for new diagram'''
 		-- Output the INSERT that _creates_ the diagram record, with a non-NULL [definition],
 		-- important because .WRITE *cannot* be called against a NULL value (in the WHILE loop)
 		-- so we insert 0x so that .WRITE has 'something' to append to...
 		PRINT 'BEGIN TRY'
-		PRINT '    PRINT ''Write diagram ' + @name + ' into new row (and get [diagram_id])'''
+		PRINT '    PRINT ''Writing diagram ' + @name + ' into new row'''
 		SELECT @line =  
 			  '	DECLARE @DiagramKey VARCHAR(100) = ''' + [name] + '''+@DiagramSuffix
 		DELETE FROM sysdiagrams WHERE name = @DiagramKey
@@ -123,7 +127,7 @@ Diagram name [' + @name + '] could not be found.
 		PRINT '    RETURN'
 		PRINT 'END CATCH'
 		PRINT ''
-		PRINT 'PRINT ''Now add all the binary data...'''
+		PRINT 'PRINT ''Adding the binary data...'''
 		PRINT 'BEGIN TRY'
 		WHILE @index < @size
 		BEGIN
@@ -131,7 +135,7 @@ Diagram name [' + @name + '] could not be found.
 			-- data, represented as hexadecimal strings
 			SELECT @line =  
 				 '    UPDATE sysdiagrams SET [definition] .Write ('
-				+ ' 0x' + UPPER(dbo.Tool_VarbinaryToVarcharHex (SUBSTRING (definition, @index, @chunk)))
+				+ ' ' + UPPER(sys.fn_varbintohexstr (SUBSTRING (definition, @index, @chunk)))
 				+ ', null, 0) WHERE diagram_id = @newid -- index:' + CAST(@index AS VARCHAR(100))
 			FROM	sysdiagrams 
 			WHERE	diagram_id = @diagram_id
@@ -140,7 +144,7 @@ Diagram name [' + @name + '] could not be found.
 		END
 		PRINT ''
 		PRINT '    PRINT ''=== Finished writing diagram id '' + CAST(@newid AS VARCHAR(100)) + ''  ==='''
-		PRINT '    PRINT ''=== Refresh your Databases-[DbName]-Database Diagrams to see the new diagram ==='''
+		PRINT '    PRINT ''=== Refresh your Database Diagrams to see the new diagram ==='''
 		PRINT 'END TRY'
 		PRINT 'BEGIN CATCH'
 		PRINT '    -- If we got here, the [definition] updates didn''t complete, so delete the diagram row'
