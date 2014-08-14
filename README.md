@@ -21,5 +21,5 @@
 **Protip:** if your diagram script is set to Build Action=Compile, include sysdiagrams.sql in your project to suppress SSDT warnings.
 
 # Tool_GrantRole #
-Unrelated utitility for setting up user accounts in SQL databases with all the steps that are easy to miss. 
+Unrelated utility for setting up user accounts in SQL databases with all the steps that are easy to miss. 
 Was formerly a gist but keeping here for better source control.
