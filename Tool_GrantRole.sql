@@ -47,7 +47,8 @@ BEGIN
 	--IF (@IsAdUser = 0)
 	BEGIN
 		PRINT 'Relinking username to login in case of database restore'
-		EXEC sp_change_users_login 'Update_One', [Lexicon_marshaluser], [Lexicon_marshaluser], null
+		SELECT @DynamicSQL = 'EXEC sp_change_users_login ''Update_One'', [' + @username + '], [' + @username + ']'
+		EXEC(@DynamicSQL)
 	END
 	
 	/*
