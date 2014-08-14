@@ -44,7 +44,7 @@ BEGIN
 		SELECT @DynamicSQL = 'EXEC sp_change_users_login ''Auto_fix'', [' + @username + '], null, ''' + @password + ''''			
 	END
 
-	--IF (@IsAdUser = 0)
+	IF (@IsAdUser = 0)
 	BEGIN
 		PRINT 'Relinking username to login in case of database restore'
 		SELECT @DynamicSQL = 'EXEC sp_change_users_login ''Update_One'', [' + @username + '], [' + @username + ']'
