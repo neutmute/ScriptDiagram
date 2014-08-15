@@ -44,13 +44,6 @@ BEGIN
 		SELECT @DynamicSQL = 'EXEC sp_change_users_login ''Auto_fix'', [' + @username + '], null, ''' + @password + ''''			
 	END
 
-	IF (@IsAdUser = 0)
-	BEGIN
-		PRINT 'Relinking username to login in case of database restore'
-		SELECT @DynamicSQL = 'EXEC sp_change_users_login ''Update_One'', [' + @username + '], [' + @username + ']'
-		EXEC(@DynamicSQL)
-	END
-	
 	/*
 	* At one time had 'SP_REVOKEDBACCESS' used here to make grantdbaccess always succeed
 	* but that has the effect of wiping all other access so sucessive calls to this proc could not be made
@@ -66,6 +59,13 @@ BEGIN
 		PRINT 'Username ''' + @username + ''' already has acccess to ' + db_name()
 	END
 
+	IF (@IsAdUser = 0)
+	BEGIN
+		PRINT 'Relinking username to login in case of database restore'
+		SELECT @DynamicSQL = 'EXEC sp_change_users_login ''Update_One'', [' + @username + '], [' + @username + ']'
+		EXEC(@DynamicSQL)
+	END
+	
 	PRINT 'Adding ' + @Username + ' to ' + @role
 	SELECT @DynamicSQL = 'sp_addrolemember ' + @role + ', ['  + @username + ']'	-- SSDT for some reason didn't recognise parameter
 	EXEC(@DynamicSQL)
