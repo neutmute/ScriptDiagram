@@ -24,7 +24,7 @@ BEGIN
 	END
 	ELSE
 	BEGIN
-		IF (@Password IS NULL)
+		IF (@password IS NULL)
 		BEGIN
 			PRINT 'Granting WINDOWS login to server for username=' + @username
 			SELECT @DynamicSQL = 'CREATE LOGIN [' + @username + '] FROM WINDOWS WITH DEFAULT_DATABASE=master'
