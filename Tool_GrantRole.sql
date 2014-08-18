@@ -38,7 +38,7 @@ BEGIN
 		END
 	END
 
-	IF (@Password IS NOT NULL)
+	IF (@password IS NOT NULL)
 	BEGIN
 		PRINT 'Autofixing ' + @username
 		SELECT @DynamicSQL = 'EXEC sp_change_users_login ''Auto_fix'', [' + @username + '], null, ''' + @password + ''''			
