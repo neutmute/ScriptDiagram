@@ -49,10 +49,10 @@ BEGIN
 	* but that has the effect of wiping all other access so sucessive calls to this proc could not be made
 	* Was added to support some database restore scenarios. Need a better way if that comes up again
 	*/
-	IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE NAME = @username )
+	IF NOT EXISTS (SELECT * FROM sys.database_principals WHERE name = @username )
 	BEGIN
 		PRINT 'Granting username=''' + @username + ''' access to ' + db_name()
-		EXEC SP_GRANTDBACCESS @username
+		EXEC sp_grantdbaccess @username
 	END
 	ELSE
 	BEGIN
