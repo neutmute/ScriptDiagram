@@ -66,7 +66,10 @@ BEGIN
 		EXEC(@DynamicSQL)
 	END
 	
-	PRINT 'Adding ' + @Username + ' to ' + @role
-	SELECT @DynamicSQL = 'sp_addrolemember ' + @role + ', ['  + @username + ']'	-- SSDT for some reason didn't recognise parameter
-	EXEC(@DynamicSQL)
+	IF (@role IS NOT NULL)
+	BEGIN
+		PRINT 'Adding ' + @Username + ' to ' + @role
+		SELECT @DynamicSQL = 'sp_addrolemember ' + @role + ', ['  + @username + ']'	-- SSDT for some reason didn't recognise parameter
+		EXEC(@DynamicSQL)
+	END
 END
