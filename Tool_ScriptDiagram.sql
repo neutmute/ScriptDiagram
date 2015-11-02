@@ -11,6 +11,9 @@ Script Sql Server diagrams.
 EXEC Tool_ScriptDiagram 'Diagram Name'
 </example>
 <remarks>
+SSDT throws warnings about the sysdiagram table being unknown. 
+How to supress warning: In the File Properties window of the SP add in 'Suppress TSql Warnings': 71502
+
 Helpful Articles
 ----------------
 1) Upload / Download to Sql 2005
@@ -27,7 +30,7 @@ http://www.thescripts.com/forum/thread81534.html
 
 4) SQL2008 'undocumented' sys.fn_varbintohexstr
 http://www.sqlservercentral.com/Forums/Topic664234-1496-1.aspx
-
+</remarks>
 DROP PROCEDURE dbo.Tool_ScriptDiagram
 */
 

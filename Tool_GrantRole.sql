@@ -4,6 +4,9 @@ Handles database restores to relink SIDs
 https://github.com/neutmute/ScriptDiagram
 
 DROP PROCEDURE dbo.Tool_GrantRole
+
+SSDT throws warnings about the sys tables being unknown. 
+How to supress warning: In the File Properties window of the SP add in 'Suppress TSql Warnings': 71502
 */
 CREATE PROCEDURE dbo.Tool_GrantRole
 (

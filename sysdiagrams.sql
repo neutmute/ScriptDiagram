@@ -1,6 +1,9 @@
 ﻿/*
 When using Tool_ScriptDiagram (https://github.com/neutmute/ScriptDiagram)
-SSDT throws warnings about the sysdiagram table being unknown. Placing this in your project silences the warnings.
+SSDT throws warnings about the sysdiagram table being unknown. 
+Suppress the warning for the procedure by: In the File Properties window of the SP add in 'Suppress TSql Warnings': 71502
+
+Placing this in your project silences the warnings.
 */
 CREATE TABLE dbo.sysdiagrams
 (
