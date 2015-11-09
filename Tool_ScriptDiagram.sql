@@ -76,6 +76,7 @@ Diagram name [' + @name + '] could not be found.
 		PRINT '<generated>' + LEFT(CONVERT(VARCHAR(23), GETDATE(), 121), 16) + '</generated>'
 		PRINT '*/'
 		PRINT 'PRINT ''=== Tool_ScriptDiagram restoring diagram ''''' + @name + ''''' ==='''
+		PRINT 'BEGIN'
 		PRINT '	-- If the sysdiagrams table has not been created in this database, create it!
 				IF NOT EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ''sysdiagrams'')
 				BEGIN
@@ -157,6 +158,7 @@ Diagram name [' + @name + '] could not be found.
 		PRINT '    PRINT ''XxXxX END Tool_ScriptDiagram - fix the error before running again XxXxX'''
 		PRINT '    RETURN'
 		PRINT 'END CATCH'
+		PRINT 'END'
 		PRINT 'GO'
 	END
 END
