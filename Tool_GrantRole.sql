@@ -7,6 +7,21 @@ DROP PROCEDURE dbo.Tool_GrantRole
 
 SSDT throws warnings about the sys tables being unknown. 
 How to supress warning: In the File Properties window of the SP add in 'Suppress TSql Warnings': 71502
+
+**Example Usage #1 - Grant AD account access to a role**
+USE myDatabase
+exec Tool_GrantRole
+       @username     = 'MyDomain\myusername'
+       ,@role        = 'db_datareader'
+	   
+	   
+**Example Usage #2 - Grant SQL account access to a role**
+USE myDatabase
+exec Tool_GrantRole
+       @username     = 'sqluser'
+       ,@role        = 'db_datareader'
+	   ,@password	 = 'ponies!'
+
 */
 CREATE PROCEDURE dbo.Tool_GrantRole
 (
