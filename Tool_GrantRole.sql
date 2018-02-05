@@ -86,7 +86,7 @@ BEGIN
 	
 	IF (@role IS NOT NULL)
 	BEGIN
-		PRINT 'Adding ' + @Username + ' to ' + @role
+		PRINT 'Adding ' + @username + ' to ' + @role
 		SELECT @DynamicSQL = 'sp_addrolemember ' + @role + ', ['  + @username + ']'	-- SSDT for some reason didn't recognise parameter
 		EXEC(@DynamicSQL)
 	END
